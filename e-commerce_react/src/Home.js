@@ -104,7 +104,7 @@ const Home = () => {
                   <span className="text-primary fs-1 mb-3">🏠</span>
                   <h5 className="fw-bold">Home & Kitchen</h5>
                   <p className="text-muted">Everything for your home</p>
-                  <Link to="/products?category=home" className="btn btn-outline-primary rounded-pill">
+                  <Link to="/products?category=Home & Kitchen" className="btn btn-outline-primary rounded-pill">
                     Browse
                   </Link>
                 </div>
