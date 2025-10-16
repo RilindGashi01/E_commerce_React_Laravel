@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Register = () => {
   const [formData, setFormData] = useState({
+    username: '',
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   });
   const [formErrors, setFormErrors] = useState({});
-  const { login, loading } = useAuth();
+  const { register, loading } = useAuth();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -27,15 +29,29 @@ const Login = () => {
 
   const validateForm = () => {
     const errors = {};
-    
+
+    if (!formData.username.trim()) {
+      errors.username = 'Username is required';
+    } else if (formData.username.length < 3) {
+      errors.username = 'Username must be at least 3 characters';
+    }
+
     if (!formData.email.trim()) {
       errors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      errors.email = "Email is invalid";
+      errors.email = 'Email is invalid';
     }
 
     if (!formData.password) {
-      errors.password = "Password is required";
+      errors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      errors.password = 'Password must be at least 6 characters';
+    }
+
+    if (!formData.confirmPassword) {
+      errors.confirmPassword = 'Please confirm your password';
+    } else if (formData.password !== formData.confirmPassword) {
+      errors.confirmPassword = 'Passwords do not match';
     }
 
     setFormErrors(errors);
@@ -47,7 +63,14 @@ const Login = () => {
 
     if (!validateForm()) return;
 
-    const result = await login(formData);
+    const registerData ={
+      name: formData.username,
+      email: formData.email,
+      password: formData.password,
+      password_confirmation: formData.confirmPassword
+    };
+
+    const result = await register(registerData)
 
     if (result.success) {
       navigate('/');
@@ -62,7 +85,7 @@ const Login = () => {
         <div className="col-md-6 col-lg-5">
           <div className="card shadow">
             <div className="card-body p-4">
-              <h2 className="card-title text-center mb-4">Welcome Back</h2>
+              <h2 className="card-title text-center mb-4">Create Account</h2>
               
               {formErrors.submit && (
                 <div className="alert alert-danger" role="alert">
@@ -71,6 +94,26 @@ const Login = () => {
               )}
 
               <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                  <label htmlFor="username" className="form-label">
+                    Username
+                  </label>
+                  <input
+                    type="text"
+                    className={`form-control ${formErrors.username ? 'is-invalid' : ''}`}
+                    id="username"
+                    name="username"
+                    value={formData.username}
+                    onChange={handleChange}
+                    placeholder="Enter your username"
+                  />
+                  {formErrors.username && (
+                    <div className="invalid-feedback">
+                      {formErrors.username}
+                    </div>
+                  )}
+                </div>
+
                 <div className="mb-3">
                   <label htmlFor="email" className="form-label">
                     Email
@@ -91,7 +134,7 @@ const Login = () => {
                   )}
                 </div>
 
-                <div className="mb-4">
+                <div className="mb-3">
                   <label htmlFor="password" className="form-label">
                     Password
                   </label>
@@ -111,6 +154,26 @@ const Login = () => {
                   )}
                 </div>
 
+                <div className="mb-4">
+                  <label htmlFor="confirmPassword" className="form-label">
+                    Confirm Password
+                  </label>
+                  <input
+                    type="password"
+                    className={`form-control ${formErrors.confirmPassword ? 'is-invalid' : ''}`}
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Confirm your password"
+                  />
+                  {formErrors.confirmPassword && (
+                    <div className="invalid-feedback">
+                      {formErrors.confirmPassword}
+                    </div>
+                  )}
+                </div>
+
                 <button 
                   type="submit" 
                   className="btn btn-primary w-100 py-2"
@@ -119,19 +182,19 @@ const Login = () => {
                   {loading ? (
                     <>
                       <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                      Signing in...
+                      Creating Account...
                     </>
                   ) : (
-                    'Sign In'
+                    'Create Account'
                   )}
                 </button>
               </form>
 
               <div className="text-center mt-3">
                 <p className="mb-0">
-                  Don't have an account?{' '}
-                  <Link to="/register" className="text-decoration-none">
-                    Create one
+                  Already have an account?{' '}
+                  <Link to="/Login" className="text-decoration-none">
+                    Sign in
                   </Link>
                 </p>
               </div>
@@ -143,4 +206,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

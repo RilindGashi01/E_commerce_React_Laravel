@@ -8,10 +8,15 @@ import Products from './Products';
 import Cart from './Cart';
 import About from './About';
 import Login from './Login';
+import Register from './Register';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
+import { AuthProvider } from './AuthContext';
+import Profile from './Components/Profile';
 
 function App() {
   return (
+    <AuthProvider>
     <Router>
       <div className='App d-flex flex-column min-vh-100'>
         <main className="flex-grow-1">
@@ -22,11 +27,14 @@ function App() {
           <Route path='/about' element={<About />}/>
           <Route path='/cart' element={<Cart />}/>
           <Route path='/login' element={<Login />}/>
+          <Route path='/register' element={<Register />}/>
+          <Route path='/profile' element={<Profile />}/>
         </Routes>
         </main>
         <Footer />
       </div>
     </Router>
+    </AuthProvider>
   )
 }
 

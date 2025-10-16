@@ -1,5 +1,4 @@
 import React,{createContext,useState, useContext, useEffect, Children} from "react";
-
 import { AuthAPI } from "./api/api";
 
 const AuthContext = createContext();
@@ -24,25 +23,25 @@ export const AuthProvider = ({children})=>{
     },[]);
     const checkAuth = async ()=>{
         try{
-            const token = localStorage.getItem('auth-token');
+            const token = localStorage.getItem('auth_token');
             if(token){
                 const response = await AuthAPI.getUser();
-                setUser(response.data);
+                setUser(response.data.user);
             }
         }catch(error){
             console.log("Not Authenticated");
-            localStorage.removeItem('auth-token');
+            localStorage.removeItem('auth_token');
         }finally{
             setLoading(false);
         }
    }
-};
+
 const login = async(credentials)=>{
     try{
        const response = await AuthAPI.login(credentials);
        const{token, user}=response.data;
 
-       localStorage.setItem('auth-token',token);
+       localStorage.setItem('auth_token',token);
        setUser(user);
 
        return{success: true}
@@ -59,7 +58,7 @@ const register = async(userData)=>{
         const response = await AuthAPI.register(userData);
         const{token,user}=response.data;
 
-        localStorage.setItem('auth-token', token);
+        localStorage.setItem('auth_token', token);
         setUser(user);
         return{success: true}
     }catch(error){
@@ -75,7 +74,7 @@ const logout = async()=>{
     }catch(error){
         console.log('Logout error',error);
     }finally{
-        localStorage.removeItem('auth-token');
+        localStorage.removeItem('auth_token');
         setUser(null);
     }
 }
@@ -85,7 +84,7 @@ const value ={
     register,
     logout,
     loading,
-    isAthenticated: !!user
+    isAuthenticated: !!user
 };
 
 return (
@@ -93,3 +92,4 @@ return (
         {children}
     </AuthContext.Provider>
 )
+}

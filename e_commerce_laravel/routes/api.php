@@ -3,10 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\Product;
+use App\Http\Controllers\AuthController;
 
 Route::middleware('auth:sanctum')->group(function (){
 Route::post('/logout',[AuthController::Class, 'logout']);
-Route::post('/user',[AuthController::Class, 'user']);
+Route::get('/user',[AuthController::Class, 'user']);
 
 Route::get('/products',function(Request $request){
     $query = Product::query();
