@@ -3,7 +3,6 @@ import { useAuth } from "../AuthContext";
 
 const Profile = () => {
   const { user } = useAuth();
-  console.log(user);
   if (!user) {
     return (
       <div className="container mt-5">

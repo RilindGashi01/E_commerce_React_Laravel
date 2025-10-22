@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import { useCartContext } from '../CartContext';
 
 
 const Navbar = () => {
   const {user, loading} =useAuth();
-  console.log(user);
+  const{getAll}=useCartContext()
   return (
     <nav className="navbar navbar-dark bg-dark">
       <div className="container">
@@ -16,7 +17,7 @@ const Navbar = () => {
         <div className="navbar-nav ms-auto d-flex flex-row">
           <Link className="nav-link mx-2" to="/">Home</Link>
           <Link className="nav-link mx-2" to="/products">Products</Link>
-          <Link className="nav-link mx-2" to="/cart">Cart</Link>
+          <Link className="nav-link mx-2" to="/cart">Cart  {getAll().length > 0 && (<span className="badge rounded-pill bg-danger"style={{fontSize: '0.6rem', padding: '0.25rem 0.4rem',}}>{getAll().length}</span>)}</Link>
           <Link className="nav-link mx-2" to="/about">About</Link>
       {user?( <div className="nav-item dropdown">
               <button 

@@ -1,8 +1,11 @@
 import axios from 'axios';
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, use} from 'react'
 import { useSearchParams } from 'react-router-dom';
+import api from './api/api';
+import { useCartContext } from './CartContext';
 
 const Products = ()=>{
+  const {getProduct}= useCartContext();
   const [data, setData]= useState([]);
   const [searchParams, setSearchParams] = useSearchParams([]);
   const category = searchParams.get('category') || '';
@@ -11,13 +14,13 @@ const Products = ()=>{
     
     const getProducts = async()=>{
       try{
-      let url = 'http://localhost:8000/api/products'
+      let url = '/api/products'
 
       if(category){
         url+=`?category=${category}`;
       }
 
-      let response = await axios.get(url);
+      let response = await api.get(url);
       setData(response.data);
     }catch(error){
       console.log('Error fetching products:', error);
@@ -73,7 +76,7 @@ const Products = ()=>{
                 <h5 className="card-title">{product.name}</h5>
                 <p className="card-text text-muted">{product.category}</p>
                 <p className="card-text fw-bold text-primary">${product.price}</p>
-                <button className="btn btn-primary btn-sm">
+                <button className="btn btn-primary btn-sm" onClick={()=>getProduct(product)}>
                   Add to Cart
                 </button>
               </div>
