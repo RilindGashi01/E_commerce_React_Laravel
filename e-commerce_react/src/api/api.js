@@ -22,4 +22,10 @@ export const AuthAPI ={
     getUser: () => api.get('/api/user'),
 };
 
+export const OrderAPI ={
+    createOrder:(orderDetails)=>api.post('/api/orders',orderDetails),
+    getOrders:()=>api.get('/api/orders'),
+    getOrderID:(orderID)=>api.get(`/api/orders/${orderID}`)
+}
+
 export default api;

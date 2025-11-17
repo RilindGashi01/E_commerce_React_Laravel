@@ -1,9 +1,30 @@
 import React from 'react'
 import { useCartContext } from './CartContext'
+import { useAuth } from "./AuthContext";
+import { OrderAPI } from './api/api';
 
 function Cart() {
-  const {getAll,increaseQunatity,decreaseQuantity} =useCartContext();
-  console.log(getAll())
+  const {user} = useAuth();
+  const {getAll,increaseQunatity,decreaseQuantity,deleteProduct} =useCartContext();
+  const total = getAll().reduce((totalSum, product)=>{
+    return totalSum + (product.price * product.quantity);
+  },0)
+
+  const proceedToCheckOut = async ()=> {
+    try{
+      const orderData = {
+        items: getAll(),
+        Total : total,
+      }
+      console.log(orderData)
+      const response = await OrderAPI.createOrder(orderData)
+      const order =response.data
+    }catch(error){
+      console.log("Order Failed: ",error)
+      alert("Order Failed")
+    }
+  };
+
   return(
     <div className="container mt-4">
     <div className="row justify-content-center">
@@ -53,7 +74,7 @@ function Cart() {
             </div>
 
             <div className="col-2">
-              <button className="btn btn-outline-danger btn-sm">
+              <button className="btn btn-outline-danger btn-sm" onClick={()=>deleteProduct(product.id)}>
                 <i className="bi bi-trash"></i>
               </button>
             </div>
@@ -65,10 +86,10 @@ function Cart() {
             <div className="col-md-4">
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <strong className="fs-5">Total:</strong>
-                <strong className="fs-4 text-primary">$1,199.00</strong>
+                <strong className="fs-4 text-primary">${total.toFixed(2)}</strong>
               </div>
               <div className="d-grid">
-                <button className="btn btn-primary btn-lg">
+                <button className="btn btn-primary btn-lg" onClick={proceedToCheckOut}>
                   Proceed to Checkout
                 </button>
               </div>

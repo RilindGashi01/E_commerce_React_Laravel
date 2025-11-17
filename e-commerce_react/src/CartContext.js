@@ -25,13 +25,17 @@ export const CartImp =({children})=>{
         setProducts(prev => prev.map(item=>( item.id === Pid)?{...item,quantity:item.quantity+1}:item))
     }
     const decreaseQuantity = (Pid)=>{
-        setProducts(prev => prev.map(item=> (item.id === Pid)?{...item,quantity:item.quantity-1}:item))
+        setProducts(prev => prev.map(item=> (item.id === Pid && item.quantity>0)?{...item,quantity:item.quantity-1}:item))
+    }
+    const deleteProduct = (Pid)=>{
+        setProducts(prev => prev.filter(item=>item.id !=Pid))
     }
     const values={
         getProduct,
         getAll,
         increaseQunatity,
-        decreaseQuantity
+        decreaseQuantity,
+        deleteProduct
     }
 
     return(
